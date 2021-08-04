@@ -7,6 +7,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import morning.cat.netty.server.handle.EchoServerHandle;
+import morning.cat.netty.server.initializer.HelloInitializer;
 
 public class ServerMain {
 
@@ -21,29 +22,10 @@ public class ServerMain {
 
 			// 设置 NioSocket 工厂
 			serverBootstrap.group(bossGroup, workerGroup);
+			//
 			serverBootstrap.channel(NioServerSocketChannel.class);
-			// 设置管道工厂 ChannelHandler
-			serverBootstrap.childHandler(new ChannelInitializer<Channel>() {
-				@Override
-				protected void initChannel(Channel channel) throws Exception {
-
-					ChannelPipeline channelPipeline = channel.pipeline();
-					// 接收信息转换成string(上行)
-					// channelPipeline.addLast("StringDecoder", new StringDecoder());
-					// 回写直接写入字符串
-					// channelPipeline.addLast("StringEncoder", new StringEncoder());
-
-					//
-					// channelPipeline.addLast("EchoServerHandle", new EchoServerHandle());
-					//
-					// channelPipeline.addLast("HelloHandle", new HelloHandle());
-
-					//
-					channelPipeline.addLast("HelloHandle", new EchoServerHandle());
-
-					// channelPipeline.addLast("TimeServerHandler", new TimeServerHandler());
-				}
-			});
+			// 设置管道工厂 Initializer
+			serverBootstrap.childHandler(new HelloInitializer());
 			// 设置参数
 			serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);
 			serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -60,7 +42,6 @@ public class ServerMain {
 			channelFuture.channel().closeFuture().sync();
 			System.out.println("closeFuture");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			// 关闭资源
