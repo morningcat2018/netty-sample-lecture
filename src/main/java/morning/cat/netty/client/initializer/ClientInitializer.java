@@ -1,4 +1,4 @@
-package morning.cat.netty.server.initializer;
+package morning.cat.netty.client.initializer;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -8,14 +8,14 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
-import morning.cat.netty.server.handle.SocketHandle;
+import morning.cat.netty.client.handle.ClientHandle;
 
 /**
- * @describe: 回调方法
+ * @describe: 类描述信息
  * @author: morningcat.zhang
- * @date: 2021/8/5 上午2:43
+ * @date: 2021/8/5 下午4:08
  */
-public class HelloInitializer extends ChannelInitializer<SocketChannel> {
+public class ClientInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
 
         ChannelPipeline channelPipeline = socketChannel.pipeline(); // 管道
@@ -26,6 +26,6 @@ public class HelloInitializer extends ChannelInitializer<SocketChannel> {
         channelPipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
         channelPipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
 
-        channelPipeline.addLast(new SocketHandle());
+        channelPipeline.addLast(new ClientHandle());
     }
 }
