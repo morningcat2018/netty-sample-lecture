@@ -3,12 +3,12 @@ package morning.cat.netty.server.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
-import morning.cat.netty.server.handle.SocketHandle;
+import morning.cat.netty.server.handle.DealMultiClientHandle;
 
 /**
  * @describe: 回调方法
@@ -20,12 +20,9 @@ public class HelloInitializer extends ChannelInitializer<SocketChannel> {
 
         ChannelPipeline channelPipeline = socketChannel.pipeline(); // 管道
 
-        channelPipeline.addLast("Decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE,
-                0, 4, 0, 4));
-        channelPipeline.addLast("Encoder", new LengthFieldPrepender(4));
+        channelPipeline.addLast(new DelimiterBasedFrameDecoder(4096, Delimiters.lineDelimiter()));
         channelPipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
         channelPipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
-
-        channelPipeline.addLast(new SocketHandle());
+        channelPipeline.addLast(new DealMultiClientHandle());
     }
 }

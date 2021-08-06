@@ -14,14 +14,14 @@ public class ClientHandle extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         System.out.println("客户端收到消息：" + msg);
-        ctx.channel().writeAndFlush("Hello , I am client" + UUID.randomUUID().toString());
+        //ctx.channel().writeAndFlush("Hello , I am client" + UUID.randomUUID().toString());
 
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        ctx.channel().writeAndFlush("Hello , I am client");
+        ctx.channel().writeAndFlush("Hello , I am " + ctx.channel().remoteAddress());
     }
 
     @Override
