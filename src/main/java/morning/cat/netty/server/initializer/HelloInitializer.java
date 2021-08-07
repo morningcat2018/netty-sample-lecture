@@ -3,12 +3,10 @@ package morning.cat.netty.server.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
-import morning.cat.netty.server.handle.DealMultiClientHandle;
+import io.netty.handler.timeout.IdleStateHandler;
+import morning.cat.netty.server.handle.MyIdleHandle;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @describe: 回调方法
@@ -20,9 +18,8 @@ public class HelloInitializer extends ChannelInitializer<SocketChannel> {
 
         ChannelPipeline channelPipeline = socketChannel.pipeline(); // 管道
 
-        channelPipeline.addLast(new DelimiterBasedFrameDecoder(4096, Delimiters.lineDelimiter()));
-        channelPipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
-        channelPipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
-        channelPipeline.addLast(new DealMultiClientHandle());
+        // idle handle
+        channelPipeline.addLast(new IdleStateHandler(5, 7, 10, TimeUnit.SECONDS));
+        channelPipeline.addLast(new MyIdleHandle());
     }
 }

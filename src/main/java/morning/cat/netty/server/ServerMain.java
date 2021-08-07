@@ -6,6 +6,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import morning.cat.netty.server.initializer.HelloInitializer;
 
 public class ServerMain {
@@ -24,7 +26,9 @@ public class ServerMain {
             //
             serverBootstrap.channel(NioServerSocketChannel.class);
             // 设置管道工厂 Initializer
-            serverBootstrap.childHandler(new HelloInitializer());
+            serverBootstrap
+                    .handler(new LoggingHandler(LogLevel.INFO)) // to bossGroup
+                    .childHandler(new HelloInitializer()); // to workerGroup
             // 设置参数
             serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);
             serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
