@@ -18,3 +18,6 @@ git remote add origin git@github.com:morningcat2018/netty-sample-lecture.git
 git branch -M main
 git push -u origin main
 ```
+
+- git push --all origin
+
