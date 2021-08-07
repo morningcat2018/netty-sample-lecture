@@ -3,10 +3,11 @@ package morning.cat.netty.server.initializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
-import morning.cat.netty.server.handle.MyIdleHandle;
-
-import java.util.concurrent.TimeUnit;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import morning.cat.netty.server.handle.MyWebSocketHandle;
 
 /**
  * @describe: 回调方法
@@ -19,7 +20,16 @@ public class HelloInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline channelPipeline = socketChannel.pipeline(); // 管道
 
         // idle handle
-        channelPipeline.addLast(new IdleStateHandler(5, 7, 10, TimeUnit.SECONDS));
-        channelPipeline.addLast(new MyIdleHandle());
+        channelPipeline.addLast(new HttpServerCodec()); // http
+        channelPipeline.addLast(new ChunkedWriteHandler());
+        channelPipeline.addLast(new HttpObjectAggregator(1024 * 8));
+
+        /**
+         * ws://host:port/context_path
+         * http://host:port/context_path
+         */
+        channelPipeline.addLast(new WebSocketServerProtocolHandler("/ws")); // ws://localhost:51001/ws
+
+        channelPipeline.addLast(new MyWebSocketHandle());
     }
 }

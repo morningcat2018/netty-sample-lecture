@@ -30,8 +30,8 @@ public class ServerMain {
                     .handler(new LoggingHandler(LogLevel.INFO)) // to bossGroup
                     .childHandler(new HelloInitializer()); // to workerGroup
             // 设置参数
-            serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);
-            serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+            serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);  // to bossGroup
+            serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true); // to workerGroup
 
             // 绑定端口
             // telnet 127.0.0.1 51001
