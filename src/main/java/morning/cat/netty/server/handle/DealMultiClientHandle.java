@@ -2,6 +2,9 @@ package morning.cat.netty.server.handle;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * @describe: 类描述信息
@@ -9,6 +12,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @date: 2021/8/5 下午3:45
  */
 public class DealMultiClientHandle extends SimpleChannelInboundHandler<String> {
+
+    private static ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 
@@ -17,18 +23,20 @@ public class DealMultiClientHandle extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         String name = ctx.channel().remoteAddress().toString();
         System.out.println(name + ":登陆上线");
-        Data.list.forEach(context -> context.channel().writeAndFlush(name + " 已上线"));
-        Data.list.add(ctx);
+
+        group.writeAndFlush(name + " 已上线");
+        group.add(ctx.channel());
     }
 
     @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        Data.list.remove(ctx);
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         String name = ctx.channel().remoteAddress().toString();
-        Data.list.forEach(context -> context.channel().writeAndFlush(name + " 已下线"));
+        System.out.println(name + ":下线");
+
+        group.writeAndFlush(name + " 已下线");
     }
 
     @Override
