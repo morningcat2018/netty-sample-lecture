@@ -7,9 +7,13 @@ P16
 
 ## Protobuf 使用最佳实践
 
-使用 git submodule
+1. git submodule
 
 - server-project
 - protobuf-files
 - protobuf-java
 - client-project
+
+
+2. git subtree 【推荐】
+
