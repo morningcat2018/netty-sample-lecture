@@ -23,5 +23,13 @@
 			<version>4.1.66.Final</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.thrift/libthrift -->
+		<dependency>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.14.2</version>
+		</dependency>
+
+
 	</dependencies>
 </project>
