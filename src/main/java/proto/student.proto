@@ -5,7 +5,20 @@ syntax = "proto2";
 package tutorial;
 
 option java_package = "morning.cat.protos";
-option java_outer_classname = "StudentManager";
+option java_outer_classname = "FacadeManager";
+
+message Facade {
+    enum DataType {
+        StudentType = 1;
+        TeacherType = 2;
+    }
+
+    required DataType data_type = 1;
+    oneof data_body {
+        Student student = 2;
+        Teacher teacher = 3;
+    }
+}
 
 message Student {
   optional string name = 1;

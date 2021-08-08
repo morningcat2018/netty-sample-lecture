@@ -1,6 +1,5 @@
 package morning.cat.netty.client;
 
-import com.google.protobuf.Any;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -10,7 +9,7 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import morning.cat.netty.client.handle.ProtobufClientHandler;
-import morning.cat.protos.StudentManager;
+import morning.cat.protos.FacadeManager;
 
 public class ClientMain {
 
@@ -30,8 +29,7 @@ public class ClientMain {
                 protected void initChannel(Channel channel) throws Exception {
                     ChannelPipeline pipeline = channel.pipeline();
                     pipeline.addLast(new ProtobufVarint32FrameDecoder());
-                    pipeline.addLast(new ProtobufDecoder(StudentManager.Student.getDefaultInstance()));
-                    pipeline.addLast(new ProtobufDecoder(StudentManager.Teacher.getDefaultInstance()));
+                    pipeline.addLast(new ProtobufDecoder(FacadeManager.Facade.getDefaultInstance()));
                     pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                     pipeline.addLast(new ProtobufEncoder());
                     pipeline.addLast(new ProtobufClientHandler());

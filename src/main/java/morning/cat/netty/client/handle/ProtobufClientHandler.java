@@ -1,12 +1,11 @@
 package morning.cat.netty.client.handle;
 
 
-import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import morning.cat.protos.StudentManager;
+import morning.cat.protos.FacadeManager;
 
-public class ProtobufClientHandler extends SimpleChannelInboundHandler<GeneratedMessageV3> {
+public class ProtobufClientHandler extends SimpleChannelInboundHandler<FacadeManager.Facade> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
@@ -18,17 +17,20 @@ public class ProtobufClientHandler extends SimpleChannelInboundHandler<Generated
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().writeAndFlush(StudentManager.Student.newBuilder().setId(100L).setName("张三"));
+        ctx.channel().writeAndFlush(FacadeManager.Facade.newBuilder().setDataType(FacadeManager.Facade.DataType.StudentType).setStudent(FacadeManager.Student.newBuilder().setId(100L).setName("学生A").build()).build());
+        ctx.channel().writeAndFlush(FacadeManager.Facade.newBuilder().setDataType(FacadeManager.Facade.DataType.StudentType).setStudent(FacadeManager.Student.newBuilder().setId(101L).setName("学生B").build()).build());
+        ctx.channel().writeAndFlush(FacadeManager.Facade.newBuilder().setDataType(FacadeManager.Facade.DataType.TeacherType).setTeacher(FacadeManager.Teacher.newBuilder().setId(201L).setName("李老师").setClassName("高一11班").build()));
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, GeneratedMessageV3 msg) throws Exception {
-        if (msg instanceof StudentManager.Student) {
-            StudentManager.Student student = (StudentManager.Student) msg;
-            System.out.println("Client 收到消息：" + student.getId() + " " + student.getName());
-        } else if (msg instanceof StudentManager.Teacher) {
-            StudentManager.Teacher teacher = (StudentManager.Teacher) msg;
-            System.out.println("Client 收到消息：" + teacher.getId() + " " + teacher.getName() + " " + teacher.getClassName());
+    protected void channelRead0(ChannelHandlerContext ctx, FacadeManager.Facade msg) throws Exception {
+
+        if (msg.getDataType().equals(FacadeManager.Facade.DataType.StudentType)) {
+            FacadeManager.Student student = msg.getStudent();
+            System.out.println("Server 收到消息【学生】：" + student.getId() + " " + student.getName());
+        } else if (msg.getDataType().equals(FacadeManager.Facade.DataType.TeacherType)) {
+            FacadeManager.Teacher teacher = msg.getTeacher();
+            System.out.println("Server 收到消息【老师】：" + teacher.getId() + " " + teacher.getName() + " " + teacher.getClassName());
         }
     }
 }
