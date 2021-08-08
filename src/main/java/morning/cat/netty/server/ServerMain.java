@@ -31,6 +31,7 @@ public class ServerMain {
                     ChannelPipeline pipeline = channel.pipeline();
                     pipeline.addLast(new ProtobufVarint32FrameDecoder());
                     pipeline.addLast(new ProtobufDecoder(StudentManager.Student.getDefaultInstance()));
+                    pipeline.addLast(new ProtobufDecoder(StudentManager.Teacher.getDefaultInstance()));
                     pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                     pipeline.addLast(new ProtobufEncoder());
                     //
