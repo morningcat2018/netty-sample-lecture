@@ -1,0 +1,13 @@
+// protoc --java_out=src/main/java src/main/java/proto/student.proto
+
+syntax = "proto2";
+
+package tutorial;
+
+option java_package = "morning.cat.protos";
+option java_outer_classname = "StudentManager";
+
+message Student {
+  optional string name = 1;
+  optional int64 id = 2;
+}

@@ -3,17 +3,14 @@ package morning.cat.netty.client;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import morning.cat.netty.client.handle.EchoClientHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import morning.cat.netty.client.handle.ProtobufClientHandler;
+import morning.cat.protos.StudentManager;
 
-import java.util.Scanner;
-
-/**
- * @describe: 类描述信息
- * @author: morningcat.zhang
- * @date: 2019/4/23 3:23 PM
- */
 public class ClientMain {
 
     public static void main(String[] args) throws InterruptedException {
@@ -21,22 +18,21 @@ public class ClientMain {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
-
             // 客户端
             Bootstrap clientBootstrap = new Bootstrap();
-
             // 设置 NioSocket 工厂
             clientBootstrap.group(workerGroup);
             clientBootstrap.channel(NioSocketChannel.class);
-
-
             // 设置管道工厂
             clientBootstrap.handler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel channel) throws Exception {
-
-                    ChannelPipeline channelPipeline = channel.pipeline();
-                    channelPipeline.addLast("ClientHandle", new EchoClientHandler());
+                    ChannelPipeline pipeline = channel.pipeline();
+                    pipeline.addLast(new ProtobufVarint32FrameDecoder());
+                    pipeline.addLast(new ProtobufDecoder(StudentManager.Student.getDefaultInstance()));
+                    pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
+                    pipeline.addLast(new ProtobufEncoder());
+                    pipeline.addLast(new ProtobufClientHandler());
                 }
             });
 
@@ -46,22 +42,7 @@ public class ClientMain {
             // 连接服务端
             ChannelFuture channelFuture = clientBootstrap.connect("127.0.0.1", 51001).sync();
             System.out.println("Netty4 Client start...");
-
-
-            //channelFuture.channel().closeFuture().sync();
-
-//            Channel channel = channelFuture.channel();
-//            Scanner scanner = new Scanner(System.in);
-//            while (true) {
-//                System.out.print("请输入：");
-//                String ss = scanner.next();
-//                if (ss.equals("exit")) {
-//                    break;
-//                }
-//                channel.writeAndFlush(ss);
-//            }
-
-
+            channelFuture.channel().closeFuture().sync();
         } finally {
             // 关闭资源
             workerGroup.shutdownGracefully();
