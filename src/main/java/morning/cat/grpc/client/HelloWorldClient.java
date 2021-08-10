@@ -25,6 +25,7 @@ import morning.cat.grpc.proto.HelloReply;
 import morning.cat.grpc.proto.HelloRequest;
 import morning.cat.grpc.server.HelloWorldServer;
 
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,6 +43,36 @@ public class HelloWorldClient {
 
         // Passing Channels to code makes code easier to test and makes it easier to reuse Channels.
         blockingStub = GreeterGrpc.newBlockingStub(channel);
+    }
+
+    private void sayHello() {
+        HelloRequest request = HelloRequest.newBuilder().setName("我的朋友").build();
+        HelloReply response;
+        try {
+            response = this.blockingStub.sayHello(request);
+        } catch (StatusRuntimeException e) {
+            //logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("sayHello: " + response.getMessage());
+    }
+
+    private void sayHelloStream() {
+        HelloRequest request = HelloRequest.newBuilder().setName("我的朋友").build();
+        Iterator<HelloReply> replyIterator;
+        try {
+            replyIterator = this.blockingStub.sayHelloStream(request);
+        } catch (StatusRuntimeException e) {
+            //logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            e.printStackTrace();
+            return;
+        }
+
+        while (replyIterator.hasNext()) {
+            System.out.println("sayHelloStream: " + replyIterator.next().getMessage());
+        }
+
     }
 
     /**
@@ -62,16 +93,8 @@ public class HelloWorldClient {
                 .build();
         try {
             HelloWorldClient client = new HelloWorldClient(channel);
-            HelloRequest request = HelloRequest.newBuilder().setName("我的朋友").build();
-            HelloReply response;
-            try {
-                response = client.blockingStub.sayHello(request);
-            } catch (StatusRuntimeException e) {
-                //logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-                e.printStackTrace();
-                return;
-            }
-            System.out.println("Greeting: " + response.getMessage());
+            client.sayHelloStream();
+
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
             // resources the channel should be shut down when it will no longer be used. If it may be used
