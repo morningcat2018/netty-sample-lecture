@@ -1,0 +1,27 @@
+{
+  "name": "netty-sample",
+  "version": "1.0.0",
+  "description": "https://grpc.io/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "node app/grpcClient.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morningcat2018/netty-sample-lecture.git"
+  },
+  "author": "morningcat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morningcat2018/netty-sample-lecture/issues"
+  },
+  "homepage": "https://github.com/morningcat2018/netty-sample-lecture#readme",
+  "dependencies": {
+    "async": "^3.2.1",
+    "google-protobuf": "^3.17.3",
+    "grpc": "^1.24.11",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.5"
+  }
+}
