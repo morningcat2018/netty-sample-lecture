@@ -35,14 +35,14 @@ public class MyGreeterImpl extends GreeterGrpc.GreeterImplBase {
 
     @Override
     public StreamObserver<HelloRequest> sayManyRequest(StreamObserver<HelloReply> responseObserver) {
-        // 因为是流式请求，所以有一个监视者，来一个请求就处理一次
+        // 因为是流式请求，所以有一个监视者，来一个请求就处理一个入参
         return new StreamObserver<HelloRequest>() {
 
             List<String> reqList = new ArrayList<>();
 
             @Override
             public void onNext(HelloRequest request) {
-                // 因为流式请求，入参会被调用多次，而响应只有一个，onNext 只能调用一次
+                // 因为流式请求，入参会被调用多次，而响应不是流式，onNext 只能调用一次
                 // responseObserver.onNext(HelloReply.newBuilder().setMessage("Hello " + request.getName()).build());
 
                 reqList.add(request.getName());
@@ -57,6 +57,27 @@ public class MyGreeterImpl extends GreeterGrpc.GreeterImplBase {
             public void onCompleted() {
                 // 流式请求结束后进行统一处理
                 responseObserver.onNext(HelloReply.newBuilder().setMessage("Hello " + reqList.stream().collect(Collectors.joining(","))).build());
+                responseObserver.onCompleted();
+            }
+        };
+    }
+
+    @Override
+    public StreamObserver<HelloRequest> sayManyToMany(StreamObserver<HelloReply> responseObserver) {
+        return new StreamObserver<HelloRequest>() {
+            @Override
+            public void onNext(HelloRequest request) {
+                // 因为流式请求，而响应也是流式，可以来一个处理一个
+                responseObserver.onNext(HelloReply.newBuilder().setMessage("Hello " + request.getName()).build());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onCompleted() {
                 responseObserver.onCompleted();
             }
         };
