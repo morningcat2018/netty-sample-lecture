@@ -93,7 +93,8 @@ public class HelloWorldClient {
                 .build();
         try {
             HelloWorldClient client = new HelloWorldClient(channel);
-            client.sayHelloStream();
+            client.sayHello();
+//            client.sayHelloStream();
 
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these

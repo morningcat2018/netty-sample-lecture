@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "node app/grpcClient.js"
+    "client": "node app/grpcClient.js",
+    "server": "node app/grpcServer.js"
   },
   "repository": {
     "type": "git",
