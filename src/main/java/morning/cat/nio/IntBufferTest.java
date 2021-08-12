@@ -4,7 +4,7 @@ import java.nio.IntBuffer;
 import java.security.SecureRandom;
 
 /**
- * @describe: IntBuffer
+ * @describe: {@link java.nio.IntBuffer}
  * @author: morningcat.zhang
  * @date: 2021/8/11 下午9:00
  */

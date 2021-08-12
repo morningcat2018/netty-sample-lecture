@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * @describe: FileChannel
+ * @describe: {@link java.nio.channels.FileChannel}
  * @author: morningcat.zhang
  * @date: 2021/8/11 下午9:13
  */

@@ -3,7 +3,7 @@ package morning.cat.nio;
 import java.nio.ByteBuffer;
 
 /**
- * @describe: ByteBuffer
+ * @describe: {@link java.nio.ByteBuffer}
  * @author: morningcat.zhang
  * @date: 2021/8/11 下午10:41
  */
