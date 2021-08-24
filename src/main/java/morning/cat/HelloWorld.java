@@ -1,17 +1,17 @@
 package morning.cat;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
- * @describe: 类描述信息
+ * @describe: Java11
  * @author: morningcat.zhang
  * @date: 2021/8/25 上午1:43
  */
 public class HelloWorld {
 
     public static void main(String[] args) {
-        new ConcurrentHashMap<Object, Object>();
-        LocalDateTime localDateTime = LocalDateTime.now();
+
+        var x = "hello world ";
+        var y = 2020;
+        System.out.println(x + y);
+
     }
 }
