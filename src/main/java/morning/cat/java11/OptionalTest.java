@@ -7,7 +7,7 @@ import java.util.Optional;
 public class OptionalTest {
 
     @Test
-    public void testName() throws Exception {
+    public void test() throws Exception {
         // of方法中如果传入的参数是null, 会抛出空指针异常
         //Optional<String> optional = Optional.of(null);
         // ofNullable可以兼容空指针, 但是实际传入null后要小心

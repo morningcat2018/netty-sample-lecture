@@ -13,22 +13,22 @@ import java.util.concurrent.CompletableFuture;
 public class HTTPClientTest {
 
     @Test
-    public void testName2() throws Exception {
+    public void test2() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:8080/test/")).build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.bilibili.com/")).build();
         BodyHandler<String> responseBodyHandler = BodyHandlers.ofString();
         CompletableFuture<HttpResponse<String>> sendAsync = client.sendAsync(request, responseBodyHandler);
         sendAsync.thenApply(t -> t.body()).thenAccept(System.out::println);
         //HttpResponse<String> response = sendAsync.get();
         //String body = response.body();
         //System.out.println(body);
-
+        Thread.sleep(1000);
     }
 
     @Test
-    public void testName() throws Exception {
+    public void test1() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:8080/test/")).build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create("https://www.bilibili.com/")).build();
         BodyHandler<String> responseBodyHandler = BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, responseBodyHandler);
         String body = response.body();

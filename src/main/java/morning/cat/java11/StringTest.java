@@ -8,7 +8,7 @@ public class StringTest {
 
     @Test
     public void testName3() throws Exception {
-        FileInputStream fis = new FileInputStream("src/com/atguigu/java11/StringTest.java");
+        FileInputStream fis = new FileInputStream("src/main/java/morning/cat/java11/StringTest.java");
         byte[] buffer = new byte[fis.available()];
         fis.read(buffer);
         fis.close();
