@@ -1,17 +1,16 @@
 package morning.cat;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * @describe: 类描述信息
  * @author: morningcat.zhang
  * @date: 2021/8/25 上午1:43
+ * @see CompletableFuture
  */
 public class HelloWorld {
 
     public static void main(String[] args) {
-        new ConcurrentHashMap<Object, Object>();
-        LocalDateTime localDateTime = LocalDateTime.now();
+        System.out.println("hello CompletableFuture");
+        System.out.println(CompletableFuture.class.getName());
     }
 }
