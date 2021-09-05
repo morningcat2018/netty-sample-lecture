@@ -4,3 +4,4 @@
 
 https://juejin.cn/book/6844733738119593991/section/6844733738270621709
 
+> zip -er archive.zip /path/to/directory/
