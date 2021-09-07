@@ -7,7 +7,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import morning.cat.netty.server.handle.EchoServerHandle;
+import morning.cat.netty.server.handle.*;
 
 
 public class ServerMain {
@@ -43,22 +43,18 @@ public class ServerMain {
             serverBootstrap.childHandler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel channel) throws Exception {
-
                     ChannelPipeline channelPipeline = channel.pipeline();
                     // 接收信息转换成string(上行)
                     // channelPipeline.addLast("StringDecoder", new StringDecoder());
                     // 回写直接写入字符串
                     // channelPipeline.addLast("StringEncoder", new StringEncoder());
 
-                    //
-                    // channelPipeline.addLast("EchoServerHandle", new EchoServerHandle());
-                    //
-                    // channelPipeline.addLast("HelloHandle", new HelloHandle());
+                    channelPipeline.addLast(new Spliter()); // 拆包器
+                    channelPipeline.addLast(new PacketDecoder());
+                    channelPipeline.addLast(new LoginRequestHandler());
+                    channelPipeline.addLast(new MessageRequestHandler());
+                    channelPipeline.addLast(new PacketEncoder());
 
-                    //
-                    channelPipeline.addLast("HelloHandle", new EchoServerHandle());
-
-                    // channelPipeline.addLast("TimeServerHandler", new TimeServerHandler());
                 }
             });
             // 设置参数

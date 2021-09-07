@@ -4,8 +4,12 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import morning.cat.netty.client.handle.EchoClientHandler;
+import morning.cat.netty.client.handle.LoginResponseHandler;
+import morning.cat.netty.client.handle.MessageResponseHandler;
 import morning.cat.netty.exception.IMException;
+import morning.cat.netty.server.handle.PacketDecoder;
+import morning.cat.netty.server.handle.PacketEncoder;
+import morning.cat.netty.server.handle.Spliter;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -26,13 +30,17 @@ public class ClientMain {
      * @param args 0 host ,1 port
      */
     public static void main(String[] args) {
-        ChannelFuture channelFuture = connect(args[0], check(args));
+        //connect(args[0], check(args));
+        connect("127.0.0.1", 51001);
+    }
+
+    private static void run(Channel channel) {
         while (true) {
             System.out.print(getCommandLine());
             String command = getCommand();
             switch (command) {
                 case "0":
-                    exitHandle(channelFuture);
+                    exitHandle(channel);
                     break;
                 case "1":
                     break;
@@ -44,7 +52,6 @@ public class ClientMain {
                     System.out.println("指令错误，重新输入");
             }
         }
-
     }
 
     private static int check(String[] args) {
@@ -58,7 +65,7 @@ public class ClientMain {
         }
     }
 
-    private static ChannelFuture connect(String host, int port) {
+    private static void connect(String host, int port) {
         // 用来处理I/O操作的多线程事件循环器
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -70,17 +77,26 @@ public class ClientMain {
                 @Override
                 protected void initChannel(Channel channel) throws Exception {
                     ChannelPipeline channelPipeline = channel.pipeline();
-                    channelPipeline.addLast("ClientHandle", new EchoClientHandler());
+
+                    channelPipeline.addLast(new Spliter()); // 拆包器
+
+                    channelPipeline.addLast(new PacketDecoder());
+                    channelPipeline.addLast(new LoginResponseHandler());
+                    channelPipeline.addLast(new MessageResponseHandler());
+                    channelPipeline.addLast(new PacketEncoder());
+
                 }
             });
             // 设置参数
-            //bootstrap.option(ChannelOption.SO_BACKLOG, 128);
+            bootstrap.option(ChannelOption.SO_BACKLOG, 128);
 
             // 连接服务端
             ChannelFuture channelFuture = connect(bootstrap, host, port, MAX_RETRY);
             //System.out.println("Netty4 Client start...");
-            //channelFuture.channel().closeFuture().sync();
-            return channelFuture;
+            bootstrap.config().group().execute(() -> run(channelFuture.channel()));
+            channelFuture.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             // 关闭资源
             workerGroup.shutdownGracefully();
@@ -122,13 +138,10 @@ public class ClientMain {
         return command;
     }
 
-    private static void exitHandle(ChannelFuture channelFuture) {
+    private static void exitHandle(Channel channel) {
         System.out.println("退出登陆");
-        try {
-            channelFuture.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        channel.close();
+        System.exit(1);
     }
 }
 

@@ -1,7 +1,6 @@
 package morning.cat.netty.packet;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import morning.cat.netty.command.CommandEnum;
 import morning.cat.netty.exception.IMException;
 import morning.cat.netty.serializer.Serializer;
@@ -16,13 +15,19 @@ import java.util.Objects;
  */
 public class PacketCodeC {
 
-    public ByteBuf encode(Packet packet) {
-        return encode(packet, Serializer.DEFAULT);
+    private PacketCodeC() {
     }
 
-    public ByteBuf encode(Packet packet, Serializer serializer) {
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
+
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
+        return encode(byteBuf, packet, Serializer.DEFAULT);
+    }
+
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet, Serializer serializer) {
         // 1. 创建 ByteBuf 对象
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer(); // TODO
+        //ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+
         // 2. 序列化 Java 对象
         byte[] bytes = serializer.serialize(packet);
 
