@@ -12,7 +12,9 @@ import morning.cat.netty.packet.MessageResponsePacket;
 public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageResponsePacket> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket msg) throws Exception {
-
+    protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket messageResponsePacket) throws Exception {
+        String fromUserId = messageResponsePacket.getFromUserId();
+        String fromUserName = messageResponsePacket.getFromUserName();
+        System.out.println(fromUserId + ":" + fromUserName + " -> " + messageResponsePacket.getMessage());
     }
 }

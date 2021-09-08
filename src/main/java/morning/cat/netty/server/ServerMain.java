@@ -27,8 +27,8 @@ public class ServerMain {
 
             // attr()方法可以给服务端的 channel，也就是NioServerSocketChannel指定一些自定义属性，
             // 然后我们可以通过channel.attr()取出这个属性
-            serverBootstrap.attr(AttributeKey.newInstance("serverName"), "nettyServer");
-            serverBootstrap.childAttr(AttributeKey.newInstance("clientKey"), "clientValue");
+            //serverBootstrap.attr(AttributeKey.newInstance("serverName"), "nettyServer");
+            //serverBootstrap.childAttr(AttributeKey.newInstance("clientKey"), "clientValue");
 
             // bossGroup handle
             // 指定在服务端启动过程中的一些逻辑
@@ -52,6 +52,7 @@ public class ServerMain {
                     channelPipeline.addLast(new Spliter()); // 拆包器
                     channelPipeline.addLast(new PacketDecoder());
                     channelPipeline.addLast(new LoginRequestHandler());
+                    channelPipeline.addLast(new AuthHandler());
                     channelPipeline.addLast(new MessageRequestHandler());
                     channelPipeline.addLast(new PacketEncoder());
 

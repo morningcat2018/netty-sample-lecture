@@ -1,5 +1,6 @@
 package morning.cat.netty.packet;
 
+import lombok.Data;
 import morning.cat.netty.command.CommandEnum;
 
 /**
@@ -7,7 +8,11 @@ import morning.cat.netty.command.CommandEnum;
  * @author: morningcat.zhang
  * @date: 2021/9/8 上午1:21
  */
+@Data
 public class LoginResponsePacket extends Packet {
+
+    private String userId;
+
     @Override
     public Byte getCommand() {
         return CommandEnum.LOGIN_RESPONSE.getCode();

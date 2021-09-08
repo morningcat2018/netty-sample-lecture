@@ -11,9 +11,7 @@ import morning.cat.netty.command.CommandEnum;
 @Data
 public class LoginRequestPacket extends Packet {
 
-    //private Integer userId;
-
-    private String username;
+    private String userName;
 
     private String password;
 

@@ -12,11 +12,20 @@ import morning.cat.netty.packet.Packet;
  */
 public class Spliter extends LengthFieldBasedFrameDecoder {
 
-    private static final int LENGTH_FIELD_OFFSET = 7;
-    private static final int LENGTH_FIELD_LENGTH = 4;
+
+    /**
+     * -------------------------------------------------------------------------------------
+     * |    魔法数   | 协议版本 | 序列化协议 ｜   指令  |     数据长度    |       数据           |
+     * | 0xABCD1234 |  Ox01   |   0x01    |   0x0A  |   0x0000000C  |    "HELLO,WORLD"     |
+     * -------------------------------------------------------------------------------------
+     *
+     * @see LengthFieldBasedFrameDecoder
+     */
+    private static final int LENGTH_FIELD_OFFSET = 7;  // 长度域偏移量 （数据域起始位置）
+    private static final int LENGTH_FIELD_LENGTH = 4;  // 长度域长度   （数据域长度）
 
     public Spliter() {
-        super(Integer.MAX_VALUE, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH);
+        super(Integer.MAX_VALUE, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH, 0, 0);
     }
 
     @Override

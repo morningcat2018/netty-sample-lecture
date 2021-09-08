@@ -2,7 +2,6 @@ package morning.cat.netty.client.handle;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import morning.cat.netty.packet.LoginRequestPacket;
 import morning.cat.netty.packet.LoginResponsePacket;
 
 /**
