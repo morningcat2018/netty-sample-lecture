@@ -7,6 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
 
@@ -25,59 +26,34 @@ public class HelloHttpServerHandle extends SimpleChannelInboundHandler<HttpObjec
         }
 
         HttpRequest httpRequest = (HttpRequest) msg;
-        String methodName = httpRequest.method().name();
-        System.out.println(methodName + " " + httpRequest.uri()); // GET
+        HttpMethod method = httpRequest.method(); // GET POST PUT DELETE
 
         URI uri = new URI(httpRequest.uri());
         if (Objects.equals(uri.getPath(), "/favicon.ico")) {
-            //System.out.println("不执行");
             return;
         }
+        System.out.println(method.name() + " " + httpRequest.uri());
         System.out.println(uri.getPath());
         System.out.println(uri.getQuery());
+
+        if (httpRequest instanceof FullHttpRequest) {
+            getJobType((FullHttpRequest) httpRequest);
+        }
 
 
         ByteBuf byteBuf = Unpooled.copiedBuffer("Hello World", CharsetUtil.UTF_8);
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, byteBuf);
-
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, byteBuf.readableBytes());
         context.writeAndFlush(response);
     }
 
-    @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelRegistered");
-        super.channelRegistered(ctx);
+    //parse job type 0,1
+    private String getJobType(FullHttpRequest request) throws IOException {
+        ByteBuf jsonBuf = request.content();
+        String jsonStr = jsonBuf.toString(CharsetUtil.UTF_8);
+        System.out.println(jsonStr);
+        return jsonStr;
     }
 
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelUnregistered");
-        super.channelUnregistered(ctx);
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelActive");
-        super.channelActive(ctx);
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelInactive");
-        super.channelInactive(ctx);
-    }
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("handlerAdded");
-        super.handlerAdded(ctx);
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("handlerRemoved");
-        super.handlerRemoved(ctx);
-    }
 }
