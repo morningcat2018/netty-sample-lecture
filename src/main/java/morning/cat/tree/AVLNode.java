@@ -3,7 +3,7 @@ package morning.cat.tree;
 import lombok.Data;
 
 /**
- * @describe: 类描述信息
+ * @link {https://www.cnblogs.com/lishanlei/p/10707794.html}
  * @author: morningcat.zhang
  * @date: 2021/11/1 上午3:46
  */
